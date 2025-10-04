@@ -19,12 +19,13 @@ import androidx.compose.ui.unit.dp
 import com.example.todoapp.model.TodoItem
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.KeyboardActions
+import com.example.todoapp.ui.theme.TodoAppTheme
 
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent { MaterialTheme { TodoApp() } }
+        setContent { TodoAppTheme { TodoApp() } }
     }
 }
 
@@ -75,30 +76,60 @@ fun TodoScreen(
 ) {
     val (active, completed) = items.partition { !it.isDone }
 
-    Column(Modifier.fillMaxSize().padding(16.dp)) {
-        Text("TODO List", style = MaterialTheme.typography.headlineSmall)
-        Spacer(Modifier.height(12.dp))
-
-        AddRow(onAdd = onAdd)
-
-        Spacer(Modifier.height(16.dp))
+    LazyColumn(
+        modifier = Modifier.fillMaxSize().padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        // Header + input
+        item {
+            Text(
+                "TODO List",
+                style = MaterialTheme.typography.headlineSmall,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            Spacer(Modifier.height(12.dp))
+            AddRow(onAdd = onAdd)
+            Spacer(Modifier.height(16.dp))
+        }
 
         // Active section
-        if (active.isNotEmpty()) {
-            Text("Items", style = MaterialTheme.typography.titleMedium)
-            Spacer(Modifier.height(8.dp))
-            TodoList(active, onToggle, onDelete)
-            Spacer(Modifier.height(16.dp))
+        if (active.isEmpty()) {
+            item {
+                Text(
+                    "No items yet",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Spacer(Modifier.height(16.dp))
+            }
         } else {
-            Text("No items yet", style = MaterialTheme.typography.bodyMedium)
-            Spacer(Modifier.height(16.dp))
+            item {
+                Text(
+                    "Items",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+                Spacer(Modifier.height(8.dp))
+            }
+            items(active, key = { it.id }) { todo ->
+                TodoRow(todo, onToggle, onDelete)
+            }
+            item { Spacer(Modifier.height(16.dp)) }
         }
 
         // Completed section
         if (completed.isNotEmpty()) {
-            Text("Completed Items", style = MaterialTheme.typography.titleMedium)
-            Spacer(Modifier.height(8.dp))
-            TodoList(completed, onToggle, onDelete)
+            item {
+                Text(
+                    "Completed Items",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+                Spacer(Modifier.height(8.dp))
+            }
+            items(completed, key = { it.id }) { todo ->
+                TodoRow(todo, onToggle, onDelete)
+            }
         }
     }
 }
