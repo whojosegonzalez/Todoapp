@@ -44,4 +44,6 @@ dependencies {
     // For the theme parent style in manifest
     implementation("com.google.android.material:material:1.12.0")
     implementation("androidx.compose.runtime:runtime-saveable")
+    implementation("androidx.compose.material:material-icons-extended")
+    implementation("androidx.compose.ui:ui-text")
 }
