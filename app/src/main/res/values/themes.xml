@@ -1,0 +1,4 @@
+<resources>
+    <!-- App theme for activities/windows; inherits from Material3 DayNight, no action bar -->
+    <style name="Theme.Todoapp" parent="Theme.Material3.DayNight.NoActionBar" />
+</resources>
